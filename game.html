@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <title >Полицейские и мошенники</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div class="center">
+    <header>
+    <h1>Полицейские и мошенники</h1>
+    <label>До смены ролей</label>
+    <div id ="progress">полоса загрузки</div>
+    </header>
+    <div class="wrapper">
+      <div class="team1gameInfo">
+      <span class="name">Название: </span> <span class="teamName" id="team1Name">Синяки</span>
+      <br><span> Очки: </span> <span id="team1Point">0</span>
+      <br><span> Осталось жизней:</span><br> <span id="team1Life">5</span>
+      </div>
+      <div class="team2gameInfo">
+      <span class="name">Название:</span> <span class="teamName" id="team2Name">Курилки</span>
+      <br><span> Очки: </span> <span id="team2Point">0</span> 
+      <br><span>Осталось жизней: </span><br><span id="team2Life">5</span>
+      </div>
+    <textarea id="stateGame">Игра готова к запуску</textarea>
+    
+    <canvas id="game"></canvas>
+  </div>
+  <div class="buttonClass">
+      <button id="btStart">Старт</button>  
+      <button id="btStop">Стоп</button>
+      <button id="btConnect">Подключиться</button>
+      <button id="btDisconnect">Отключиться</button>
+      <button id="btReconnect">Переподключение</button>
+      <button id="btCancel">Отменить игру</button>
+      <button id="btExit">Выход</button>
+  </div>
+  </div>
+  </body>
+</html>
