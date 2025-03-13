@@ -1,0 +1,613 @@
+{
+	"info": {
+		"_postman_id": "8c20405c-cc81-4ee4-bab5-f90eff519dae",
+		"name": "Дмитрий_Бизяев_Рязань_Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36832015"
+	},
+	"item": [
+		{
+			"name": "Game",
+			"item": [
+				{
+					"name": "1. POST /game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Fixed ReferenceError by accessing globalUserID using pm.globals\r",
+									"pm.test(\"Время меньше 1000мс\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Статус нормальный, работает топ!\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Название игры\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"Игра для игры\");\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"pm.globals.set(\"globalMapID\", jsonData.id);\r",
+									"pm.globals.set(\"globalUserID\", jsonData.owner.id)\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Name\": \"Игра для игры\",\r\n  \"MapId\": \"ca4e5c5f68624583ba02cd8650c3dc1b\",\r\n  \"SwitchTimeout\": 10,\r\n  \"StartupTeamLives\": 7,\r\n  \"PoliceSpeed\": 10,\r\n  \"ThiefSpeed\": 11\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/game",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. GET /game",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Логин игрока, который создал перую игру - karachi\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].owner.login).to.eql(\"karachi\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0].id).to.eql(pm.variables.get(\"globalMapID\"));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/game",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"game"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. GET /game/{gameId}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Название первой команды 'Синяки'\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.team1Stats.name).to.eql(\"Синяки\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Имеется ли информация о команде 'team2Stats'\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"team2Stats\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/game/{{globalMapID}}",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"game",
+								"{{globalMapID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. DELETE /game/{gameId}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Успешное удаление игры\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Время выполенения меньеш 1000мс\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/game/{{globalMapID}}",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"game",
+								"{{globalMapID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5. GET /games",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Нашлись именно те, у кого start = 1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.start).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/games?start=1&count=3",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"games"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "1"
+								},
+								{
+									"key": "count",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Map",
+			"item": [
+				{
+					"name": "1. GET /map",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[2].owner.nativeName).to.eql(\"Несмеянова Алина\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Админ Рутович\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/map",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"map"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. GET /maps",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Наличие Content-Length в headers\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Length\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Статус теста 'ОК'\", function () {\r",
+									"    pm.response.to.have.status(\"OK\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/maps",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"maps"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. GET /user/{userId}/maps",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/user/da18d794b01d44a2b89b06fe2132492b/maps",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"user",
+								"da18d794b01d44a2b89b06fe2132492b",
+								"maps"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "POST /user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Проверка логина\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.login).to.eql(\"KarachiPlay\");\r",
+									"});\r",
+									"pm.test(\"Проверка имени\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.nativeName).to.eql(\"KarachiPlay\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Login\": \"KarachiPlay\",\r\n  \"NativeName\": \"KarachiPlay\",\r\n  \"Password\": \"PlayPassword\",\r\n  \"ConfirmPassword\": \"PlayPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/user",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. GET /me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Проверка логина\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.login).to.eql(\"karachi\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Проверка роли\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.role).to.eql(1);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/me",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. GET /user/{userId}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"login\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"     var expectedResponse = {\r",
+									"        id: \"06e1993309d14c899f66f0ab70ac54e1\",\r",
+									"        login: \"karachi\",\r",
+									"        nativeName: \"Бизяев Дмитрий\",\r",
+									"        role: 1\r",
+									"    };\r",
+									"    pm.response.to.have.body(expectedResponse);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/user/{{globalUserID}}",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"user",
+								"{{globalUserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4. PUT /user/{userId}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Your test name\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.nativeName).to.eql(\"KarachiPlayNew\");\r",
+									"});\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"login\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"NativeName\": \"KarachiPlayNew\",\r\n  \"Role\": 1,\r\n  \"OldPassword\": \"PlayPassword\",\r\n  \"Password\": \"NewPlayPassword\",\r\n  \"ConfirmPassword\": \"NewPlayPassword\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://5.101.77.14:8085/api/user/f5258f2889cc4a89a1a688672a9f25e5",
+							"protocol": "http",
+							"host": [
+								"5",
+								"101",
+								"77",
+								"14"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"user",
+								"f5258f2889cc4a89a1a688672a9f25e5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "AQAAANCMnd8BFdERjHoAwE_Cl-sBAAAAdvNOpnWqbUyViKIe1KA6owAAAAACAAAAAAAQZgAAAAEAACAAAABqKHcqyfH14pxwzgeLC4Rz953b49M8D9vWRXHIOujlywAAAAAOgAAAAAIAACAAAADaJ9vqulyNR0jg1AjewKCqLeC8jic3aDlDjbHlsJix2TABAACgrQwF0MExEeUu_cHFOCO_byxeFun_0YUULhjXCaH_5Ax6wjPVSeRd19f3cR2XXsVqKY2OhEoVs0dk_kF7IBJC4vU2LSuHJfQTul9sb6l2nNU5NEvfjyiaa6VLvZ5kdvCYfy2gBVddzMk8N6t_dW7Gd3GRhPhGxcs18OCBHvlBrwyZ8lp1fzF_Dlb-0PFNWs3cgIjPZAyxa-KGWLUdPMuY_MB-75_Dc7A4r1O4ogp-c6rBrR1AiALIjH34VqD-JHw1Ky-eZUMBOWTpKrTb8MimLftE7VnKUPs9pB7evaT46AhRHtiWR1RE3doHAeMSzeGC1DfiBPQtP3dGH9RqeWD6GIq3Ndlmz1U2rGxJVqAjEHzJAzNkM-Usje6qkeL-O-KZpRkMMbnf9dYUHYL_t-3OQAAAAMWxz-aXf4oc9hn6ET-s80sfhIPllV9T-DE0covNAcFaGh5QqvsWE7FA14Ii1S5E6b7MDRgsoZr8ERro51EusJg",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
